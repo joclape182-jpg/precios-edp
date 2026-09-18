@@ -19,7 +19,7 @@
             width: 1080px;  
             height: 1920px; 
             
-            background-image: url('123465465.jpg');
+            background-image: url('123465465.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -28,18 +28,17 @@
             top: 50%;
             left: 50%;
             
-            /* MODO PC (Para probar). Para MODO TV (Rotado), cambia esta línea por:
-               transform: translate(-50%, -50%) rotate(90deg); */
-            transform: translate(-50%, -50%) scale(0.45);
+            /* MODO TV (Rotado 90 grados) */
+            transform: translate(-50%, -50%) rotate(90deg);
             transform-origin: center center;
         }
 
-     #contenedor-precios {
+        #contenedor-precios {
             position: absolute;
-            top: 34%;  /* Reducido para levantar todo el bloque y despegarlo de las líneas amarillas */
+            top: 34%;  
             right: 8%; 
             width: 300px; 
-            height: 51%; /* Mantenemos este valor para no perder la separación que ya logramos */
+            height: 52%; 
             display: flex;
             flex-direction: column;
             justify-content: space-between; 
@@ -84,57 +83,14 @@
     </div>
 
     <script>
-        // 1. PEGA AQUÍ TU ENLACE PUBLICADO DE GOOGLE SHEETS
-        const urlCSV = 'TU_ENLACE_CSV_AQUI';
-
-        async function actualizarPrecios() {
-            if (urlCSV === 'TU_ENLACE_CSV_AQUI') return; // No hace nada si no has puesto el enlace
-            
-            try {
-                const respuesta = await fetch(urlCSV);
-                const datos = await respuesta.text();
-                
-                // Separa el documento Excel por filas
-                const filas = datos.split('\n');
-                
-                // Lista de IDs exactos de nuestro HTML
-                const ids = [
-                    'precio-pollo', 'precio-pierna', 'precio-pechuga', 'precio-alas',
-                    'precio-cazuela', 'precio-menudo', 'precio-cuellos', 'precio-higado',
-                    'precio-filete', 'precio-costilla', 'precio-cuero', 'precio-molidae',
-                    'precio-molidac', 'precio-piernas', 'precio-muslo'
-                ];
-
-                // Lee la Columna B (índice 1) y la inyecta en el diseño
-                for (let i = 0; i < ids.length; i++) {
-                    if(filas[i]) {
-                        const columnas = filas[i].split(',');
-                        if(columnas.length >= 2) {
-                            document.getElementById(ids[i]).innerText = columnas[1].trim();
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("Error de conexión:", error);
-            }
-        }
-
-        // Ejecuta la actualización apenas se abre el archivo
-        actualizarPrecios();
-        
-        // El sistema volverá a buscar precios nuevos en el Excel cada 2 minutos
-        setInterval(actualizarPrecios, 120000); 
-  <script>
-        // Enlace exacto proporcionado por ti
-        const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJA1Ca73vGi7pQxe5AGv2ZfyHoxLQnK6OXiGySf6v8LfgayEtI4ZLISWSNAol7vuo2PFO1kcfNmsL0/pub?gid=0&single=true&output=csv';
+        const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJA1Ca73vGi7pQxe5AGv2ZfyHoxLQnK6OXiGySf6v8LfgayEtI4ZLISWSNAol7vuo2PFO1kcfNmsL0/pub?output=csv';
 
         async function actualizarPrecios() {
             try {
                 const respuesta = await fetch(urlCSV);
                 
-                // Si la conexión falla, mostrará "Error" en el primer precio
                 if (!respuesta.ok) {
-                    document.getElementById('precio-pollo').innerText = "Error";
+                    document.getElementById('precio-pollo').innerText = "Err";
                     return; 
                 }
 
@@ -150,7 +106,6 @@
 
                 for (let i = 0; i < ids.length; i++) {
                     if(filas[i]) {
-                        // Busca si el Excel separa por comas (,) o punto y coma (;)
                         const separador = filas[i].includes(';') ? ';' : ',';
                         const columnas = filas[i].split(separador);
                         
@@ -160,15 +115,13 @@
                     }
                 }
             } catch (error) {
-                // Si Chrome bloquea la conexión local, también mostrará "Error"
-                document.getElementById('precio-pollo').innerText = "Error";
-                console.error("Fallo de conexión:", error);
+                document.getElementById('precio-pollo').innerText = "Err";
             }
         }
 
         actualizarPrecios();
         setInterval(actualizarPrecios, 120000); 
-    </script>>
+    </script>
 
 </body>
 </html>
